@@ -48,6 +48,10 @@ import { inject, computed, reactive } from "vue";
 import { FormControl, Dropdown, Autocomplete, createListResource, ErrorMessage } from "frappe-ui";
 import dayjs from "dayjs";
 
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 
 import PageHeader from "../components/common/PageHeader.vue";
 import {sessionUser} from "@/data/session";
@@ -79,7 +83,7 @@ const friendAutocompleteOptions = computed(() => {
 })
 
 const expenseListResource = createListResource({
-	doctype: "Expense"
+	doctype: "Expense",
 })
 
 function saveExpense() {
@@ -90,7 +94,13 @@ function saveExpense() {
 			splits: expenseDetails.selected_friends.map((f) => ({
 			user: f.value,
 		}))
-})
+},
+{
+	onSuccess() {
+		router.replace({name: "Dashboard"})
+	}
+}
+)
 }
 </script>
 
