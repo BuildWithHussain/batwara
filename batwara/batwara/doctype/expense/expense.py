@@ -1,7 +1,7 @@
 # Copyright (c) 2024, Build With Hussain and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -12,8 +12,9 @@ class Expense(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from batwara.batwara.doctype.expense_split.expense_split import ExpenseSplit
 		from frappe.types import DF
+
+		from batwara.batwara.doctype.expense_split.expense_split import ExpenseSplit
 
 		amended_from: DF.Link | None
 		amount: DF.Currency
@@ -43,3 +44,18 @@ class Expense(Document):
 		for s in self.splits:
 			s.amount = split_amount
 
+	def on_submit(self):
+		self.create_ledger_entries()
+
+	def create_ledger_entries(self):
+		for split in self.splits:
+			if split.user == self.paid_by:
+				continue
+
+			le = frappe.new_doc("Split Ledger Entry")
+			le.amount = split.amount
+			le.currency = split.currency
+			le.credit_user = split.user
+			le.debit_user = self.paid_by
+			le.expense = self.name
+			le.insert().submit()
