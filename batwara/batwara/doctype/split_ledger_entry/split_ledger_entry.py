@@ -1,7 +1,7 @@
 # Copyright (c) 2024, Build With Hussain and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -23,4 +23,9 @@ class SplitLedgerEntry(Document):
 		is_settlement: DF.Check
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		self.validate_credit_and_debit_user_different()
+
+	def validate_credit_and_debit_user_different(self):
+		if self.credit_user == self.debit_user:
+			frappe.throw("You can't pay yourself!")

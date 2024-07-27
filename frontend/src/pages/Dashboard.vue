@@ -57,7 +57,7 @@
 				<span class="font-bold">{{ settlementDetails.paid_by.label }}</span> is paying <span class="font-bold">{{ settlementDetails.paid_to.label }}</span>
 			</div>
 
-			<div>
+			<div class="mt-2">
 				<ErrorMessage :message="ledgerEntryResource.insert.error" />
 			</div>
   		</template>
