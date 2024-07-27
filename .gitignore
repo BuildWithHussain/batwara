@@ -5,3 +5,5 @@
 tags
 node_modules
 __pycache__
+batwara/www/frontend.html
+batwara/public/frontend/
