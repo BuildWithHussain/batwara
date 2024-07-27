@@ -1,4 +1,5 @@
 import frappe
+from twilio.rest import Client
 
 
 @frappe.whitelist()
@@ -66,3 +67,39 @@ def get_summary_for_user(user: str) -> list:
 		summary[friend]["full_name"] = frappe.db.get_value("User", friend, "full_name")
 
 	return summary
+
+
+def get_twilio_client():
+	batwara_settings = frappe.get_doc("Batwara Settings")
+	account_sid = batwara_settings.twilio_account_sid
+	auth_token = batwara_settings.get_password("twilio_auth_token")
+
+	return Client(account_sid, auth_token)
+
+
+@frappe.whitelist(allow_guest=True)
+def send_otp(phone: str):
+	client = get_twilio_client()
+	service_id = frappe.db.get_single_value("Batwara Settings", "twilio_service_id")
+	client.verify.v2.services(service_id).verifications.create(to=phone, channel="sms")
+
+
+
+@frappe.whitelist(allow_guest=True)
+def verify_otp_and_login(phone: str, otp: str):
+	client = get_twilio_client()
+	service_id = frappe.db.get_single_value("Batwara Settings", "twilio_service_id")
+
+	verification_check = client.verify.v2.services(service_id).verification_checks.create(
+		to=phone, code=otp
+	)
+
+	if verification_check.status != "approved":
+		frappe.throw("Incorrect OTP!")
+
+	# login the user
+	from frappe.auth import LoginManager
+
+	login_manager = LoginManager()
+	login_manager.login_as("buildwithhussain@gmail.com")
+

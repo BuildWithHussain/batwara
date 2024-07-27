@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-07-27 15:05:20.910844",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "twilio_account_sid",
+  "twilio_service_id",
+  "column_break_qakw",
+  "twilio_auth_token",
+  "section_break_sdyh",
+  "msg91_authkey"
+ ],
+ "fields": [
+  {
+   "fieldname": "msg91_authkey",
+   "fieldtype": "Password",
+   "label": "MSG91 Authkey"
+  },
+  {
+   "fieldname": "twilio_account_sid",
+   "fieldtype": "Data",
+   "label": "Twilio Account SID"
+  },
+  {
+   "fieldname": "column_break_qakw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "twilio_auth_token",
+   "fieldtype": "Password",
+   "label": "Twilio Auth Token"
+  },
+  {
+   "fieldname": "section_break_sdyh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "twilio_service_id",
+   "fieldtype": "Data",
+   "label": "Twilio Service ID"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-07-27 16:38:42.703345",
+ "modified_by": "Administrator",
+ "module": "Batwara",
+ "name": "Batwara Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
