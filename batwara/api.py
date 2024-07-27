@@ -62,4 +62,7 @@ def get_summary_for_user(user: str) -> list:
 			amount = user_owes_dict[friend]["amount"]
 			summary[friend] = {"net_amount": amount, "type": "to_send"}
 
+	for friend in summary:
+		summary[friend]["full_name"] = frappe.db.get_value("User", friend, "full_name")
+
 	return summary
