@@ -50,7 +50,7 @@ def get_summary_for_user(user: str) -> list:
 			owed_to_user = owed_to_user_dict[friend]["amount"] - user_owes_dict[friend]["amount"]
 
 			if owed_to_user < 0:
-				summary[friend] = {"net_amount": owed_to_user, "type": "to_give"}
+				summary[friend] = {"net_amount": -owed_to_user, "type": "to_send"}
 			elif owed_to_user > 0:
 				summary[friend] = {"net_amount": owed_to_user, "type": "to_receive"}
 			else:

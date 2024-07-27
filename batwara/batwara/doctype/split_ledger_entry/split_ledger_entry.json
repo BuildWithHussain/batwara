@@ -9,6 +9,7 @@
   "expense",
   "column_break_gdib",
   "currency",
+  "is_settlement",
   "section_break_ewwy",
   "credit_user",
   "column_break_uqmh",
@@ -78,12 +79,18 @@
    "label": "Debit User",
    "options": "User",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_settlement",
+   "fieldtype": "Check",
+   "label": "Is Settlement?"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-27 12:49:46.675534",
+ "modified": "2024-07-27 14:15:21.360919",
  "modified_by": "Administrator",
  "module": "Batwara",
  "name": "Split Ledger Entry",
