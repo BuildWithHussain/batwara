@@ -29,9 +29,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import VOtpInput from "vue3-otp-input";
 import { FormControl, createResource, ErrorMessage, LoadingText } from "frappe-ui";
 import PageHeader from "../components/common/PageHeader.vue"
+
+const router = useRouter();
 
 const phone = ref("");
 const otp = ref(null);
@@ -56,6 +59,9 @@ const verifyOTPResource = createResource({
 			phone: phone.value,
 			otp: otp.value
 		}
+	},
+	onSuccess() {
+		router.replace({name: "Dashboard"})
 	}
 })
 

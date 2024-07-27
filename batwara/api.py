@@ -97,9 +97,17 @@ def verify_otp_and_login(phone: str, otp: str):
 	if verification_check.status != "approved":
 		frappe.throw("Incorrect OTP!")
 
+	# find the user to which this phone number belongs to
+	user_exists = frappe.db.exists("User", {"mobile_no": phone})
+
+	if not user_exists:
+		frappe.throw("Phone number not registered!")
+
+	user = frappe.db.get_value("User", {"mobile_no": phone}, "name")
+
 	# login the user
 	from frappe.auth import LoginManager
 
 	login_manager = LoginManager()
-	login_manager.login_as("buildwithhussain@gmail.com")
+	login_manager.login_as(user)
 
