@@ -7,6 +7,11 @@ const routes = [
     path: '/',
     name: 'Dashboard',
     component: () => import('@/pages/Dashboard.vue'),
+  },
+  {
+	path: '/new-expense',
+	name: 'CreateExpense',
+	component: () => import("@/pages/CreateNewExpense.vue")
   }
 ]
 
