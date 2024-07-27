@@ -10,7 +10,7 @@ export function getFriendsListResource() {
 			"a": sessionUser()
 		},
 		orderBy: "b",
-		auto: true,
+		auto: sessionUser() && sessionUser() != "Guest",
 		cache: "friends-list"
 	})
 }

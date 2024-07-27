@@ -14,10 +14,10 @@ const routes = [
 	component: () => import("@/pages/CreateNewExpense.vue")
   },
   {
-	path: '/login-with-phone',
-	name: 'LoginWithPhone',
+	path: '/login',
+	name: 'Login',
 	meta: {
-		isPublicPage: true
+		isLoginPage: true
 	},
 	component: () => import("@/pages/LoginWithPhone.vue")
   }
@@ -36,8 +36,12 @@ router.beforeEach(async (to, from, next) => {
     isLoggedIn = false
   }
 
-  if (!isLoggedIn && !to.meta.isPublicPage) {
-	window.location.href = "/login?redirect-to=/frontend"
+  if (!isLoggedIn && !to.meta.isLoginPage) {
+	next({name: "Login"})
+  }
+
+  if (isLoggedIn && to.meta.isLoginPage) {
+	next({name: "Dashboard"});
   }
 
   next();

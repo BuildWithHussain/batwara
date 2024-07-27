@@ -84,19 +84,39 @@ def send_otp(phone: str):
 	client.verify.v2.services(service_id).verifications.create(to=phone, channel="sms")
 
 
-
 @frappe.whitelist(allow_guest=True)
 def verify_otp_and_login(phone: str, otp: str):
+	verify_otp(phone, otp)
+	login_user_with_phone(phone)
+
+
+@frappe.whitelist(allow_guest=True)
+def verify_otp_and_register(email: str, full_name: str, phone: str, otp: str):
+	verify_otp(phone, otp)
+	create_user_and_login(email, full_name, phone)
+
+
+def create_user_and_login(email, first_name, phone):
+	frappe.get_doc({
+		"doctype": "User",
+		"email": email,
+		"mobile_no": phone,
+		"first_name": first_name
+	}).insert(ignore_permissions=True)
+	login_user_with_phone(phone)
+
+
+def verify_otp(phone: str, otp: str):
 	client = get_twilio_client()
 	service_id = frappe.db.get_single_value("Batwara Settings", "twilio_service_id")
 
-	verification_check = client.verify.v2.services(service_id).verification_checks.create(
-		to=phone, code=otp
-	)
+	verification_check = client.verify.v2.services(service_id).verification_checks.create(to=phone, code=otp)
 
 	if verification_check.status != "approved":
 		frappe.throw("Incorrect OTP!")
 
+
+def login_user_with_phone(phone: str):
 	# find the user to which this phone number belongs to
 	user_exists = frappe.db.exists("User", {"mobile_no": phone})
 
@@ -110,4 +130,3 @@ def verify_otp_and_login(phone: str, otp: str):
 
 	login_manager = LoginManager()
 	login_manager.login_as(user)
-
