@@ -20,7 +20,7 @@
 	You have not invited your friends yet.
 </div>
 
-<div class="mt-4" v-if="invitationListResource.list.data">
+<div class="mt-4" v-if="invitationListResource.list.data && invitationListResource.list.data.length > 0">
 	<h3 class="font-semibold font-base">Invitations</h3>
 
 	<ul class="space-y-2 mt-4">
