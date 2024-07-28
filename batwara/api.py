@@ -79,6 +79,10 @@ def get_twilio_client():
 
 @frappe.whitelist(allow_guest=True)
 def send_otp(phone: str):
+	if frappe.conf.developer_mode:
+		frappe.cache.set_value("twilio_fake_otp", "123456")
+		return
+
 	client = get_twilio_client()
 	service_id = frappe.db.get_single_value("Batwara Settings", "twilio_service_id")
 	client.verify.v2.services(service_id).verifications.create(to=phone, channel="sms")
@@ -107,6 +111,12 @@ def create_user_and_login(email, first_name, phone):
 
 
 def verify_otp(phone: str, otp: str):
+	if frappe.conf.developer_mode:
+		if frappe.cache.get_value("twilio_fake_otp") == otp:
+			return
+		else:
+			frappe.throw("Incorrect OTP!")
+
 	client = get_twilio_client()
 	service_id = frappe.db.get_single_value("Batwara Settings", "twilio_service_id")
 
