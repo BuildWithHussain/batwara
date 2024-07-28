@@ -12,12 +12,16 @@
 </template>
 
 <script setup>
-import { computed, inject, provide } from "vue";
+import { computed, inject, provide, watch } from "vue";
 
 import { getFriendsListResource } from "@/data/friends";
 
 const session = inject("session");
 const friendsList = getFriendsListResource();
+
+watch(() => session.isLoggedIn, () => {
+	friendsList.fetch();
+})
 
 const friends = computed(() => {
 	return friendsList.list.data || [];
