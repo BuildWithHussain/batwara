@@ -3,7 +3,16 @@
 		<div class="space-y-3">
 			<FormControl v-model="signUpDetails.full_name" type="text" label="Full Name" placeholder="Jane Doe" />
 			<FormControl v-model="signUpDetails.email" type="email" label="Email" placeholder="janedoe@email.com" />
-			<FormControl v-model="signUpDetails.phone" type="phone" label="Phone" />
+
+			<div class="flex justify-center items-end">
+				<FormControl class="shrink-0 w-24" disabled type="select" value="+91" :options="[
+					{
+						value: '+91',
+						label: '+91'
+					}
+				]" />
+				<FormControl class="w-full" v-model="signUpDetails.phone" type="tel" label="Phone Number" placeholder="Phone" />
+			</div>
 
 			<Button :disabled="otpSent" :loading="sendOTPResource.loading" @click="sendOTPResource.submit()" variant="outline" theme="green">Get OTP</Button>
 		</div>
@@ -54,7 +63,7 @@ const sendOTPResource = createResource({
 	url: "batwara.api.send_otp",
 	makeParams() {
 		return {
-			phone: signUpDetails.phone
+			phone: "+91" + signUpDetails.phone
 		}
 	},
 	onSuccess() {
@@ -66,7 +75,8 @@ const verifyOTPAndRegister = createResource({
 	url: "batwara.api.verify_otp_and_register",
 	makeParams() {
 		return {
-			...signUpDetails
+			...signUpDetails,
+			phone: "+91" + signUpDetails.phone
 		}
 	},
 	onSuccess() {
