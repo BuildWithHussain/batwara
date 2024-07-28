@@ -146,9 +146,10 @@ def verify_otp_and_register(email: str, full_name: str, phone: str, otp: str, in
 
 
 def create_user_and_login(email, first_name, phone):
-	frappe.get_doc({"doctype": "User", "email": email, "mobile_no": phone, "first_name": first_name}).insert(
+	user_doc = frappe.get_doc({"doctype": "User", "email": email, "mobile_no": phone, "first_name": first_name}).insert(
 		ignore_permissions=True
 	)
+	user_doc.add_roles("Batwara User")
 	login_user_with_phone(phone)
 
 
