@@ -65,3 +65,6 @@ class Expense(Document):
 			le.debit_user = self.paid_by
 			le.expense = self.name
 			le.insert().submit()
+
+	def after_insert(self):
+		self.submit()
