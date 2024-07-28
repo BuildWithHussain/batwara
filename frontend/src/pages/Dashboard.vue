@@ -21,7 +21,7 @@
 					</div>
 
 					<div v-else-if="details.type === 'to_receive'">
-						{{ details.full_name }} ows you ₹{{ details.net_amount }}.
+						{{ details.full_name }} owes you ₹{{ details.net_amount }}.
 					</div>
 				</li>
 			</ul>

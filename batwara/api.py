@@ -130,15 +130,19 @@ def add_friend(phone: str, invite_code: str):
 	invited_by = frappe.db.get_value("Friend Invitation", invite_code, "invited_by")
 	friend = get_user_name_with_phone(phone)
 
+	# TODO: check if already friend, ignore then
 	frappe.get_doc({"doctype": "Friend Mapping", "a": invited_by, "b": friend}).insert(
 		ignore_permissions=True
 	)
 
+	frappe.db.set_value("Friend Invitation", invite_code, "status", "Accepted")
+
 
 @frappe.whitelist(allow_guest=True)
-def verify_otp_and_register(email: str, full_name: str, phone: str, otp: str):
+def verify_otp_and_register(email: str, full_name: str, phone: str, otp: str, invite_code=None):
 	verify_otp(phone, otp)
 	create_user_and_login(email, full_name, phone)
+	add_friend(phone, invite_code)
 
 
 def create_user_and_login(email, first_name, phone):

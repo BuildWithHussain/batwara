@@ -75,7 +75,6 @@ const verifyOTPResource = createResource({
 	},
 	onSuccess() {
 		session.postLogin();
-		router.replace({ name: "Dashboard" })
 	}
 })
 

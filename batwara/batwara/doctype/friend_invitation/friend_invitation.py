@@ -19,11 +19,11 @@ class FriendInvitation(Document):
 		amended_from: DF.Link | None
 		invited_by: DF.Link
 		invitee_name: DF.Data
-		invitee_phone: DF.Phone
+		invitee_phone: DF.Data
 		status: DF.Literal["Not Sent", "Pending", "Accepted", "Rejected"]
 	# end: auto-generated types
 
-	def after_insert(self):
+	def before_insert(self):
 		self.send_invite()
 
 	def send_invite(self):

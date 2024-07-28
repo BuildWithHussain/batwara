@@ -27,15 +27,25 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted, inject } from "vue";
 import { FormControl, createResource, LoadingText, ErrorMessage } from "frappe-ui";
 import OTPInput from "../auth/OTPInput.vue";
+import { useRoute } from "vue-router";
+
+
+const session = inject("session");
 
 const signUpDetails = reactive({
 	phone: null,
 	otp: null,
 	email: "",
-	full_name: ""
+	full_name: "",
+	invite_code: null
+})
+
+const route = useRoute();
+onMounted(() => {
+	signUpDetails.invite_code = route.query.code;
 })
 
 const otpSent = ref(false);
@@ -55,13 +65,12 @@ const sendOTPResource = createResource({
 const verifyOTPAndRegister = createResource({
 	url: "batwara.api.verify_otp_and_register",
 	makeParams() {
-		print({...signUpDetails})
 		return {
 			...signUpDetails
 		}
 	},
 	onSuccess() {
-
+		session.postLogin();
 	}
 })
 

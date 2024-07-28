@@ -31,6 +31,7 @@ export const session = reactive({
 	userResource.reload()
 	session.user = sessionUser()
 	session.login.reset()
+	router.replace({ name: "Dashboard" })
   },
   logout: createResource({
     url: 'logout',

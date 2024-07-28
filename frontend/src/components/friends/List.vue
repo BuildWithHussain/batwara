@@ -20,6 +20,19 @@
 	You have not invited your friends yet.
 </div>
 
+<div class="mt-4" v-if="invitationListResource.list.data">
+	<h3 class="font-semibold font-base">Invitations</h3>
+
+	<ul class="space-y-2 mt-4">
+		<li class="flex justify-between" v-for="invite in invitationListResource.list.data">
+			<div>
+				{{ invite.invitee_name }}
+			</div>
+			<Badge :theme="invite.status == 'Not Sent' ? 'red' : 'orange'">{{ invite.status }}</Badge>
+		</li>
+	</ul>
+</div>
+
 <Dialog :options="{ title: 'Invite Friend' }" v-model="showInviteFriendsDialog">
 	<template #body-content>
 		<div class="space-y-3">
@@ -44,7 +57,7 @@
 
 <script setup>
 import { inject, ref, reactive } from "vue";
-import { Avatar, createListResource, Dialog, FormControl } from "frappe-ui";
+import { Avatar, createListResource, Dialog, FormControl, Badge } from "frappe-ui";
 import PageHeader from "../common/PageHeader.vue";
 import { sessionUser } from "@/data/session";
 
@@ -58,7 +71,14 @@ const inviteDetails = reactive({
 })
 
 const invitationListResource = createListResource({
-	doctype: "Friend Invitation"
+	doctype: "Friend Invitation",
+	fields: ["invitee_name", "status"],
+	filters: {
+		invited_by: sessionUser(),
+		status: ["in", ["Pending", "Not Sent"]]
+	},
+	orderBy: "creation desc",
+	auto: true
 })
 
 function sendInvite() {
