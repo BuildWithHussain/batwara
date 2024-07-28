@@ -17,6 +17,7 @@ class BatwaraSettings(Document):
 		msg91_authkey: DF.Password | None
 		twilio_account_sid: DF.Data | None
 		twilio_auth_token: DF.Password | None
+		twilio_phone_number: DF.Data | None
 		twilio_service_id: DF.Data | None
 	# end: auto-generated types
 

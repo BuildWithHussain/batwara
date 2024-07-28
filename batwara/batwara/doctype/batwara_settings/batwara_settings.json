@@ -9,6 +9,7 @@
   "twilio_service_id",
   "column_break_qakw",
   "twilio_auth_token",
+  "twilio_phone_number",
   "section_break_sdyh",
   "msg91_authkey"
  ],
@@ -40,12 +41,17 @@
    "fieldname": "twilio_service_id",
    "fieldtype": "Data",
    "label": "Twilio Service ID"
+  },
+  {
+   "fieldname": "twilio_phone_number",
+   "fieldtype": "Data",
+   "label": "Twilio Phone Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-07-27 16:38:42.703345",
+ "modified": "2024-07-28 14:06:41.471750",
  "modified_by": "Administrator",
  "module": "Batwara",
  "name": "Batwara Settings",

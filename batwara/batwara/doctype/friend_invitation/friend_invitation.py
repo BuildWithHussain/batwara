@@ -34,7 +34,7 @@ class FriendInvitation(Document):
 Hey {self.invitee_name}! {invited_by} has invited you to join their friend circle on batwara.app: {invitation_link}
 """
 		if not frappe.conf.developer_mode:
-			send_text_message(message, self.invitee_phone, "+12085515961")
+			send_text_message(message, self.invitee_phone)
 		else:
 			print(message)
 
