@@ -12,9 +12,8 @@ class Expense(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
 		from batwara.batwara.doctype.expense_split.expense_split import ExpenseSplit
+		from frappe.types import DF
 
 		amended_from: DF.Link | None
 		amount: DF.Currency
@@ -23,7 +22,7 @@ class Expense(Document):
 		description: DF.Data
 		notes: DF.SmallText | None
 		paid_by: DF.Link
-		split_method: DF.Literal["Equally", "Manual"]
+		split_method: DF.Literal["Equally", "Manually"]
 		splits: DF.Table[ExpenseSplit]
 	# end: auto-generated types
 
@@ -35,7 +34,13 @@ class Expense(Document):
 			self.calculate_equal_splits()
 		else:
 			# manually
-			pass
+			self.validate_manual_splits()
+
+	def validate_manual_splits(self):
+		sum_of_splits = sum(x.amount for x in self.splits)
+
+		if sum_of_splits != self.amount:
+			frappe.throw("Sum of splits must be equal to total amount!")
 
 	def calculate_equal_splits(self):
 		num_splits = len(self.splits)

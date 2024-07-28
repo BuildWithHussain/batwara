@@ -40,6 +40,14 @@
 
 			<Autocomplete placeholder="Select friends" :options="friendAutocompleteOptions" v-model="expenseDetails.selected_friends" :multiple="true" />
 		</div>
+
+		<div v-if="expenseDetails.split_method === 'Manually'">
+			<ol class="space-y-3">
+				<li v-for="friend in expenseDetails.selected_friends">
+					<FormControl v-model.number="friend.amount" type="number" :label="friend.label" placeholder="0.0" />
+				</li>
+			</ol>
+		</div>
 	</div>
 </template>
 
@@ -92,7 +100,8 @@ function saveExpense() {
 			...expenseDetails,
 			paid_by: sessionUser(),
 			splits: expenseDetails.selected_friends.map((f) => ({
-			user: f.value,
+				user: f.value,
+				amount: f.amount || 0.0
 		}))
 },
 {
