@@ -50,7 +50,7 @@ class Expense(Document):
 		for s in self.splits:
 			s.amount = split_amount
 
-	def on_submit(self):
+	def before_submit(self):
 		self.create_ledger_entries()
 
 	def create_ledger_entries(self):
