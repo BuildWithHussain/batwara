@@ -186,3 +186,9 @@ def get_user_name_with_phone(phone: str):
 		frappe.throw("Phone number not registered!")
 
 	return frappe.db.get_value("User", {"mobile_no": phone}, "name")
+
+@frappe.whitelist()
+def link_attachments_to_expense(name: str, attachments: list):
+	for attachment in attachments:
+		frappe.db.set_value("File", attachment["name"], "attached_to_doctype", "Expense")
+		frappe.db.set_value("File", attachment["name"], "attached_to_name", name)

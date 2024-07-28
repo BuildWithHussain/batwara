@@ -49,20 +49,57 @@
 			</ol>
 		</div>
 	</div>
+
+
+	<div>
+		<h3 class="font-semibold text-base my-4">Attach Receipts</h3>
+
+		<FileUploader
+			:fileTypes="['image/*']"
+			@success="onFileUploadSuccess"
+    >
+		<template
+			v-slot="{
+				file,
+				uploading,
+				progress,
+				uploaded,
+				message,
+				error,
+				total,
+				success,
+				openFileSelector,
+			}"
+		>
+			<Button @click="openFileSelector" :loading="uploading">
+			{{ uploading ? `Uploading ${progress}%` : 'Upload Image' }}
+			</Button>
+		</template>
+    </FileUploader>
+
+	<div class="mt-4">
+		<ul class="grid grid-cols-4 gap-3 justify-center items-center">
+			<li :key="attachment.name" v-for="attachment in attachments">
+				<div class="w-20 h-20 border-gray-500 border rounded-sm overflow-hidden">
+					<img class="object-contain" :src="attachment.file_url" />
+				</div>
+			</li>
+		</ul>
+	</div>
+	</div>
 </template>
 
 <script setup>
-import { inject, computed, reactive } from "vue";
-import { FormControl, Dropdown, Autocomplete, createListResource, ErrorMessage } from "frappe-ui";
+import { inject, computed, reactive, ref } from "vue";
+import { FileUploader, FormControl, Dropdown, Autocomplete, createListResource, createResource, ErrorMessage } from "frappe-ui";
 import dayjs from "dayjs";
 
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-
 import PageHeader from "../components/common/PageHeader.vue";
-import {sessionUser} from "@/data/session";
+import { sessionUser } from "@/data/session";
 
 const friends = inject("friends");
 
@@ -76,8 +113,9 @@ const expenseDetails =  reactive({
 	selected_friends: [{
 		label: 'You',
 		value: sessionUser()
-	}]
+	}],
 })
+const attachments = ref([]);
 
 const friendAutocompleteOptions = computed(() => {
 	const options = friends.value.map(f => ({label: f.full_name, value: f.friend, image: f.user_image}))
@@ -90,8 +128,17 @@ const friendAutocompleteOptions = computed(() => {
 	return options;
 })
 
+// LOT OF NOISE, SO MUTED!
+
 const expenseListResource = createListResource({
 	doctype: "Expense",
+})
+
+const linkAttachmentsResource = createResource({
+	url: "batwara.api.link_attachments_to_expense",
+	onSuccess() {
+		router.replace({ name: "Dashboard" })
+	}
 })
 
 function saveExpense() {
@@ -105,11 +152,19 @@ function saveExpense() {
 		}))
 },
 {
-	onSuccess() {
-		router.replace({name: "Dashboard"})
+	onSuccess(data) {
+		// link attachments
+		linkAttachmentsResource.submit({
+			attachments: attachments.value,
+			name: data.name
+		});
 	}
 }
 )
+}
+
+function onFileUploadSuccess(fileDoc) {
+	attachments.value.push(fileDoc);
 }
 </script>
 
