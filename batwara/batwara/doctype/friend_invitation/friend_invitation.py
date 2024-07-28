@@ -28,7 +28,7 @@ class FriendInvitation(Document):
 
 	def send_invite(self):
 		invited_by = frappe.db.get_value("User", self.invited_by, "full_name")
-		invitation_link = f"{frappe.local.site}/frontend/login?code={self.name}"
+		invitation_link = f"https://{frappe.local.site}/frontend/login?code={self.name}"
 
 		message = f"""
 Hey {self.invitee_name}! {invited_by} has invited you to join their friend circle on batwara.app: {invitation_link}
