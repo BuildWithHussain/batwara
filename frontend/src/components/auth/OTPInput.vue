@@ -1,6 +1,6 @@
 <template>
 	<VOtpInput
-		input-classes="w-10 h-10 font-bold m-1 rounded border-gray-400 focus:border-0 focus:ring-2 focus:ring-green-500"
+		input-classes="w-full font-bold m-1 rounded border-gray-400 focus:border-0 focus:ring-2 focus:ring-green-500"
 		:should-auto-focus="true"
 		:should-focus-order="true"
 		v-model="model"
