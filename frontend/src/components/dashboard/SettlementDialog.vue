@@ -62,7 +62,7 @@ function recordPayment() {
 		"is_settlement": true
 	}, {
 		onSuccess() {
-			showSettleUpDialog.value = false;
+			showDialog.value = false;
 			summaryResource.reload();
 		}
 	})
