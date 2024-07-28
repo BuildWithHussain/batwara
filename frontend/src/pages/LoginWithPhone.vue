@@ -31,19 +31,26 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
-import { useRouter } from "vue-router";
+import { inject, ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { Card, TabButtons, FormControl, createResource, ErrorMessage, LoadingText } from "frappe-ui";
 import SignUpForm from "../components/auth/SignUpForm.vue";
 import OTPInput from "../components/auth/OTPInput.vue";
 
 const session = inject("session");
+const route = useRoute();
 const router = useRouter();
 
 const phone = ref("");
 const otp = ref(null);
 const otpSent = ref(false);
 const selectedTab = ref("login");
+const invitationCode = ref(null);
+
+
+onMounted(() => {
+	invitationCode.value  = route.query.code;
+})
 
 const sendOTPResource = createResource({
 	"url": "batwara.api.send_otp",
@@ -62,7 +69,8 @@ const verifyOTPResource = createResource({
 	makeParams() {
 		return {
 			phone: phone.value,
-			otp: otp.value
+			otp: otp.value,
+			invite_code: invitationCode.value
 		}
 	},
 	onSuccess() {

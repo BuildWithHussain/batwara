@@ -1,5 +1,6 @@
 import frappe
-from twilio.rest import Client
+
+from batwara.utils import get_twilio_client
 
 
 @frappe.whitelist()
@@ -69,12 +70,6 @@ def get_summary_for_user(user: str) -> list:
 	return summary
 
 
-def get_twilio_client():
-	batwara_settings = frappe.get_doc("Batwara Settings")
-	account_sid = batwara_settings.twilio_account_sid
-	auth_token = batwara_settings.get_password("twilio_auth_token")
-
-	return Client(account_sid, auth_token)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -89,9 +84,25 @@ def send_otp(phone: str):
 
 
 @frappe.whitelist(allow_guest=True)
-def verify_otp_and_login(phone: str, otp: str):
+def verify_otp_and_login(phone: str, otp: str, invite_code=None):
 	verify_otp(phone, otp)
 	login_user_with_phone(phone)
+
+	if invite_code:
+		add_friend(phone, invite_code)
+
+def add_friend(phone: str, invite_code: str):
+	if not frappe.db.exists("Friend Invitation", invite_code):
+		return
+
+	invited_by = frappe.db.get_value("Friend Invitation", invite_code, "invited_by")
+	friend = get_user_name_with_phone(phone)
+
+	frappe.get_doc({
+		"doctype": "Friend Mapping",
+		"a": invited_by,
+		"b": friend
+	}).insert(ignore_permissions=True)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -127,16 +138,21 @@ def verify_otp(phone: str, otp: str):
 
 
 def login_user_with_phone(phone: str):
-	# find the user to which this phone number belongs to
-	user_exists = frappe.db.exists("User", {"mobile_no": phone})
-
-	if not user_exists:
-		frappe.throw("Phone number not registered!")
-
-	user = frappe.db.get_value("User", {"mobile_no": phone}, "name")
+	user = get_user_name_with_phone(phone)
 
 	# login the user
 	from frappe.auth import LoginManager
 
 	login_manager = LoginManager()
 	login_manager.login_as(user)
+
+
+def get_user_name_with_phone(phone: str):
+	# find the user to which this phone number belongs to
+	user_exists = frappe.db.exists("User", {"mobile_no": phone})
+
+	if not user_exists:
+		frappe.throw("Phone number not registered!")
+
+	return frappe.db.get_value("User", {"mobile_no": phone}, "name")
+

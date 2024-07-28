@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-07-28 10:24:58.790981",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "invited_by",
+  "status",
+  "column_break_rxst",
+  "invitee_name",
+  "invitee_phone",
+  "section_break_rvjp",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_rvjp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Friend Invitation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "invited_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Invited By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_rxst",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invitee_phone",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "label": "Invitee Phone",
+   "reqd": 1
+  },
+  {
+   "fieldname": "invitee_name",
+   "fieldtype": "Data",
+   "label": "Invitee Name",
+   "reqd": 1
+  },
+  {
+   "default": "Not Sent",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Sent\nPending\nAccepted\nRejected"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-07-28 10:30:43.814918",
+ "modified_by": "Administrator",
+ "module": "Batwara",
+ "name": "Friend Invitation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
