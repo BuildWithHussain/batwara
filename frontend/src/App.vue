@@ -1,14 +1,22 @@
 <template>
   <div class="mx-4 my-2">
+	<nav v-if="session.isLoggedIn">
+		<ul>
+			<li>
+				<Button @click="session.logout.submit()" :loading="session.logout.loading">Log out</Button>
+			</li>
+		</ul>
+	</nav>
     <router-view />
   </div>
 </template>
 
 <script setup>
-import { computed, provide } from "vue";
+import { computed, inject, provide } from "vue";
 
 import { getFriendsListResource } from "@/data/friends";
 
+const session = inject("session");
 const friendsList = getFriendsListResource();
 
 const friends = computed(() => {
