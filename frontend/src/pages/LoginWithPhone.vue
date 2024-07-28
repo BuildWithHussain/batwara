@@ -15,7 +15,15 @@
 
 	<div v-if="selectedTab === 'login'">
 		<div class="space-y-3">
-			<FormControl :disabled="otpSent" v-model="phone" type="tel" label="Phone Number" placeholder="Phone" />
+			<div class="flex justify-center items-end">
+				<FormControl class="shrink-0 w-24" disabled type="select" value="+91" :options="[
+					{
+						value: '+91',
+						label: '+91'
+					}
+				]" />
+				<FormControl class="w-full" :disabled="otpSent" v-model="phone" type="tel" label="Phone Number" placeholder="Phone" />
+			</div>
 
 			<Button :disabled="otpSent" :loading="sendOTPResource.loading" @click="sendOTPResource.submit()" variant="outline" theme="green">Get OTP</Button>
 		</div>
@@ -56,7 +64,7 @@ const sendOTPResource = createResource({
 	"url": "batwara.api.send_otp",
 	makeParams() {
 		return {
-			phone: phone.value
+			phone: "+91" + phone.value
 		}
 	},
 	onSuccess() {
@@ -68,7 +76,7 @@ const verifyOTPResource = createResource({
 	url: 'batwara.api.verify_otp_and_login',
 	makeParams() {
 		return {
-			phone: phone.value,
+			phone: "+91" + phone.value,
 			otp: otp.value,
 			invite_code: invitationCode.value
 		}
