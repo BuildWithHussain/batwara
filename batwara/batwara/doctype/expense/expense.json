@@ -118,7 +118,7 @@
    "link_fieldname": "expense"
   }
  ],
- "modified": "2024-07-28 12:48:36.351002",
+ "modified": "2024-07-28 15:53:40.656974",
  "modified_by": "Administrator",
  "module": "Batwara",
  "name": "Expense",
@@ -146,7 +146,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "All",
+   "role": "Batwara User",
    "share": 1,
    "write": 1
   }
