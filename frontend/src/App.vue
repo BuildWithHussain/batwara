@@ -1,11 +1,13 @@
 <template>
   <div class="mx-4 my-2">
-	<nav v-if="session.isLoggedIn">
+	<nav class="flex justify-between items-center mb-6" v-if="session.isLoggedIn">
 		<ul>
-			<li>
-				<Button @click="session.logout.submit()" :loading="session.logout.loading">Log out</Button>
+			<li class="font-semibold text-gray-900 text-xl">
+				<span class="text-3xl mr-2">👛</span> batwara.app
 			</li>
 		</ul>
+
+		<Button @click="session.logout.submit()" :loading="session.logout.loading">Log out</Button>
 	</nav>
     <router-view />
   </div>
