@@ -1,17 +1,6 @@
 <template>
 	<div>
-		<PageHeader heading="Your friends" />
-
-		<div v-if="friends">
-			<ol class="flex flex-col space-y-3">
-				<li class="flex items-center space-x-2" v-for="friend in friends" :key="friend">
-					<Avatar size="xl" :label="friend.full_name" :url="friend.user_image" />
-					<div>
-						{{ friend.full_name }}
-					</div>
-				</li>
-			</ol>
-		</div>
+		<FriendsList />
 
 		<div class="mt-5">
 			<Button route="/new-expense" variant="solid" theme="green">+ Add Expense</Button>
@@ -70,9 +59,10 @@
 
 <script setup>
 import { inject, ref, computed, reactive } from "vue";
-import { Avatar, createResource, createListResource, LoadingText, Dialog, Autocomplete, FormControl, ErrorMessage } from "frappe-ui";
+import { createResource, createListResource, LoadingText, Dialog, Autocomplete, FormControl, ErrorMessage } from "frappe-ui";
 import { sessionUser } from "@/data/session";
 import PageHeader from "../components/common/PageHeader.vue";
+import FriendsList from "../components/friends/List.vue";
 
 const friends = inject("friends");
 
