@@ -11,11 +11,11 @@
 							<Avatar size="xl" :image="details.user_image" :label="details.full_name" />
 
 							<div v-if="details.type === 'to_send'">
-								You owe {{ details.full_name }} ₹{{ details.net_amount }}.
+								You owe <span class="font-semibold">{{ details.full_name }}</span> ₹{{ details.net_amount }}
 							</div>
 
 							<div v-else-if="details.type === 'to_receive'">
-								{{ details.full_name }} owes you ₹{{ details.net_amount }}.
+								<span class="font-semibold">{{ details.full_name }}</span> owes you ₹{{ details.net_amount }}
 							</div>
 						</div>
 
