@@ -26,7 +26,7 @@ watch(() => session.isLoggedIn, () => {
 })
 
 const friends = computed(() => {
-	return friendsList.list.data || [];
+	return friendsList.data || [];
 })
 
 provide("friends", friends);

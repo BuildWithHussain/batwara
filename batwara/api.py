@@ -4,6 +4,39 @@ from batwara.utils import get_twilio_client
 
 
 @frappe.whitelist()
+def get_friends_for_current_user():
+	current_user = frappe.session.user
+	return get_friends_for_user(current_user)
+
+
+def get_friends_for_user(user: str):
+	friend_mappings = frappe.db.get_all(
+		"Friend Mapping",
+		fields=[
+			"a",
+			"b",
+			"a.full_name as afn",
+			"b.full_name as bfn",
+			"a.user_image as aui",
+			"b.user_image as bui",
+		],
+		or_filters={"a": user, "b": user},
+	)
+
+	friends = {}
+
+	for mapping in friend_mappings:
+		if mapping.a == user:
+			friends[mapping.b] = {"friend": mapping.b, "full_name": mapping.bfn, "user_image": mapping.bui}
+		else:
+			# b is the user
+			friends[mapping.a] = { "friend": mapping.a, "full_name": mapping.afn, "user_image": mapping.aui}
+
+	friends_list = list(friends.values())
+	return friends_list
+
+
+@frappe.whitelist()
 def get_summary_for_session_user():
 	user = frappe.session.user
 	return get_summary_for_user(user)
@@ -70,8 +103,6 @@ def get_summary_for_user(user: str) -> list:
 	return summary
 
 
-
-
 @frappe.whitelist(allow_guest=True)
 def send_otp(phone: str):
 	if frappe.conf.developer_mode:
@@ -91,6 +122,7 @@ def verify_otp_and_login(phone: str, otp: str, invite_code=None):
 	if invite_code:
 		add_friend(phone, invite_code)
 
+
 def add_friend(phone: str, invite_code: str):
 	if not frappe.db.exists("Friend Invitation", invite_code):
 		return
@@ -98,11 +130,9 @@ def add_friend(phone: str, invite_code: str):
 	invited_by = frappe.db.get_value("Friend Invitation", invite_code, "invited_by")
 	friend = get_user_name_with_phone(phone)
 
-	frappe.get_doc({
-		"doctype": "Friend Mapping",
-		"a": invited_by,
-		"b": friend
-	}).insert(ignore_permissions=True)
+	frappe.get_doc({"doctype": "Friend Mapping", "a": invited_by, "b": friend}).insert(
+		ignore_permissions=True
+	)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -112,12 +142,9 @@ def verify_otp_and_register(email: str, full_name: str, phone: str, otp: str):
 
 
 def create_user_and_login(email, first_name, phone):
-	frappe.get_doc({
-		"doctype": "User",
-		"email": email,
-		"mobile_no": phone,
-		"first_name": first_name
-	}).insert(ignore_permissions=True)
+	frappe.get_doc({"doctype": "User", "email": email, "mobile_no": phone, "first_name": first_name}).insert(
+		ignore_permissions=True
+	)
 	login_user_with_phone(phone)
 
 
@@ -155,4 +182,3 @@ def get_user_name_with_phone(phone: str):
 		frappe.throw("Phone number not registered!")
 
 	return frappe.db.get_value("User", {"mobile_no": phone}, "name")
-
