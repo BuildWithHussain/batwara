@@ -11,6 +11,7 @@ import {
   setConfig,
   frappeRequest,
   resourcesPlugin,
+  ErrorMessage
 } from 'frappe-ui'
 import { session } from './data/session'
 
@@ -24,6 +25,7 @@ app.use(resourcesPlugin)
 app.component('Button', Button)
 app.component('Card', Card)
 app.component('Input', Input)
+app.component('ErrorMessage', ErrorMessage)
 
 app.provide("session", session);
 
