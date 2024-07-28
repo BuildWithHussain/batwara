@@ -12,8 +12,9 @@ class Expense(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from batwara.batwara.doctype.expense_split.expense_split import ExpenseSplit
 		from frappe.types import DF
+
+		from batwara.batwara.doctype.expense_split.expense_split import ExpenseSplit
 
 		amended_from: DF.Link | None
 		amount: DF.Currency
