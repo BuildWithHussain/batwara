@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-4 my-2">
+  <div class="mx-4 my-4 mb-10">
 	<nav class="flex justify-between items-center mb-6" v-if="session.isLoggedIn">
 		<p class="font-semibold text-gray-900 text-xl">
 			<span class="text-3xl mr-2">👛</span> batwara.app
