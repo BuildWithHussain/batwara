@@ -23,7 +23,7 @@ class FriendInvitation(Document):
 		status: DF.Literal["Not Sent", "Pending", "Accepted", "Rejected"]
 	# end: auto-generated types
 
-	def before_insert(self):
+	def after_insert(self):
 		self.send_invite()
 
 	def send_invite(self):
@@ -38,4 +38,4 @@ Hey {self.invitee_name}! {invited_by} has invited you to join their friend circl
 		else:
 			print(message)
 
-		self.status = "Pending"
+		self.db_set("status", "Pending")
