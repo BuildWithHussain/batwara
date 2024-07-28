@@ -4,14 +4,22 @@
 			<LoadingText />
 		</div>
 		<div v-else-if="summaryResource.data">
-			<ul>
+			<ul class="flex flex-col space-y-3">
 				<li :key="friend" v-for="details, friend in summaryResource.data">
-					<div v-if="details.type === 'to_send'">
-						You owe {{ details.full_name }} ₹{{ details.net_amount }}.
-					</div>
+					<div class="flex items-center justify-between">
+						<div class="flex items-center space-x-2">
+							<Avatar size="xl" :image="details.user_image" :label="details.full_name" />
 
-					<div v-else-if="details.type === 'to_receive'">
-						{{ details.full_name }} owes you ₹{{ details.net_amount }}.
+							<div v-if="details.type === 'to_send'">
+								You owe {{ details.full_name }} ₹{{ details.net_amount }}.
+							</div>
+
+							<div v-else-if="details.type === 'to_receive'">
+								{{ details.full_name }} owes you ₹{{ details.net_amount }}.
+							</div>
+						</div>
+
+						<Button size="lg" icon="file-text" />
 					</div>
 				</li>
 			</ul>
@@ -29,7 +37,7 @@
 
 <script setup>
 import { ref } from "vue";
-import {createResource, LoadingText, Card} from "frappe-ui";
+import {createResource, LoadingText, Card, Avatar} from "frappe-ui";
 import SettlementDialog from "../dashboard/SettlementDialog.vue";
 
 const showSettleUpDialog = ref(false);

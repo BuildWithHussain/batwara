@@ -98,7 +98,9 @@ def get_summary_for_user(user: str) -> list:
 			summary[friend] = {"net_amount": amount, "type": "to_send"}
 
 	for friend in summary:
-		summary[friend]["full_name"] = frappe.db.get_value("User", friend, "full_name")
+		full_name, user_image = frappe.db.get_value("User", friend, ["full_name", "user_image"])
+		summary[friend]["full_name"] = full_name
+		summary[friend]["user_image"] = user_image
 
 	return summary
 
