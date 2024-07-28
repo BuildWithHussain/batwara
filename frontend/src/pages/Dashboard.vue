@@ -1,29 +1,8 @@
 <template>
-	<div>
-		<div class="mt-5">
-			<PageHeader heading="Summary" />
-		</div>
+	<BalanceSummary />
 
-		<div v-if="summaryResource.loading">
-			<LoadingText />
-		</div>
-		<div v-else-if="summaryResource.data">
-			<ul>
-				<li :key="friend" v-for="details, friend in summaryResource.data">
-					<div v-if="details.type === 'to_send'">
-						You owe {{ details.full_name }} ₹{{ details.net_amount }}.
-					</div>
-
-					<div v-else-if="details.type === 'to_receive'">
-						{{ details.full_name }} owes you ₹{{ details.net_amount }}.
-					</div>
-				</li>
-			</ul>
-		</div>
-
-		<div class="mt-5">
-			<Button @click="showSettleUpDialog = true" variant="outline" theme="green">Settle Up</Button>
-		</div>
+	<div class="mt-5">
+		<Button @click="showSettleUpDialog = true" variant="outline" theme="green">Settle Up</Button>
 	</div>
 
 	<Dialog v-model="showSettleUpDialog" :options="{
@@ -53,9 +32,10 @@
 
 <script setup>
 import { inject, ref, computed, reactive } from "vue";
-import { createResource, createListResource, LoadingText, Dialog, Autocomplete, FormControl, ErrorMessage } from "frappe-ui";
+import { createListResource, Dialog, Autocomplete, FormControl, ErrorMessage } from "frappe-ui";
 import { sessionUser } from "@/data/session";
-import PageHeader from "../components/common/PageHeader.vue";
+
+import BalanceSummary from "../components/dashboard/BalanceSummary.vue";
 
 const friends = inject("friends");
 
@@ -67,13 +47,6 @@ const settlementDetails = reactive({
 
 const showSettleUpDialog = ref(false);
 
-const summaryResource = createResource({
-	url: "batwara.api.get_summary_for_session_user",
-	auto: true,
-	onSuccess(d) {
-		console.log(d)
-	}
-})
 
 const friendAutocompleteOptions = computed(() => {
 	const options = friends.value.map(f => ({label: f.full_name, value: f.friend, image: f.user_image}))
