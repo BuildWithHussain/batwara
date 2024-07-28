@@ -10,7 +10,7 @@
     <router-view />
   </div>
 
-  <nav class="absolute bottom-0 w-full bg-gray-100 py-2 px-8">
+  <nav v-if="session.isLoggedIn" class="absolute bottom-0 w-full bg-gray-100 py-2 px-8">
 	<ul class="flex justify-around items-center">
 		<li>
 			<RouterLink :to="{name: 'Dashboard'}" v-slot="{ isExactActive }">
