@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<FriendsList />
-
 		<div class="mt-5">
 			<Button route="/new-expense" variant="solid" theme="green">+ Add Expense</Button>
 		</div>
@@ -62,7 +60,6 @@ import { inject, ref, computed, reactive } from "vue";
 import { createResource, createListResource, LoadingText, Dialog, Autocomplete, FormControl, ErrorMessage } from "frappe-ui";
 import { sessionUser } from "@/data/session";
 import PageHeader from "../components/common/PageHeader.vue";
-import FriendsList from "../components/friends/List.vue";
 
 const friends = inject("friends");
 
