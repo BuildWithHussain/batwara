@@ -1,28 +1,38 @@
 <template>
-	<PageHeader heading="Summary" />
-	<div v-if="summaryResource.loading">
-		<LoadingText />
-	</div>
-	<div v-else-if="summaryResource.data">
-		<ul>
-			<li :key="friend" v-for="details, friend in summaryResource.data">
-				<div v-if="details.type === 'to_send'">
-					You owe {{ details.full_name }} ₹{{ details.net_amount }}.
-				</div>
+	<Card title="Summary">
+		<div v-if="summaryResource.loading">
+			<LoadingText />
+		</div>
+		<div v-else-if="summaryResource.data">
+			<ul>
+				<li :key="friend" v-for="details, friend in summaryResource.data">
+					<div v-if="details.type === 'to_send'">
+						You owe {{ details.full_name }} ₹{{ details.net_amount }}.
+					</div>
 
-				<div v-else-if="details.type === 'to_receive'">
-					{{ details.full_name }} owes you ₹{{ details.net_amount }}.
-				</div>
-			</li>
-		</ul>
-	</div>
+					<div v-else-if="details.type === 'to_receive'">
+						{{ details.full_name }} owes you ₹{{ details.net_amount }}.
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<template #actions>
+			<Button @click="showSettleUpDialog = true" variant="outline" theme="green">Settle Up</Button>
+		</template>
+	</Card>
 
 	<ErrorMessage :message="summaryResource.error" />
+
+	<SettlementDialog v-model="showSettleUpDialog" />
 </template>
 
 <script setup>
-import {createResource, LoadingText} from "frappe-ui";
-import PageHeader from "../common/PageHeader.vue";
+import { ref } from "vue";
+import {createResource, LoadingText, Card} from "frappe-ui";
+import SettlementDialog from "../dashboard/SettlementDialog.vue";
+
+const showSettleUpDialog = ref(false);
 
 const summaryResource = createResource({
 	url: "batwara.api.get_summary_for_session_user",
