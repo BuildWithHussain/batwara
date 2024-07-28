@@ -9,7 +9,6 @@
 					<div class="flex items-center justify-between">
 						<div class="flex items-center space-x-2">
 							<Avatar size="xl" :image="details.user_image" :label="details.full_name" />
-
 							<div v-if="details.type === 'to_send'">
 								You owe <span class="font-semibold">{{ details.full_name }}</span> ₹{{ details.net_amount }}
 							</div>
@@ -19,7 +18,17 @@
 							</div>
 						</div>
 
-						<Button size="lg" icon="file-text" />
+						<Button
+							class="text-gray-700"
+							@click="() => {
+								selectedFriend.name = friend;
+								selectedFriend.full_name = details.full_name;
+								transactionHistoryResource.reload();
+								showTransactionHistoryDialog = true;
+							}"
+							size="lg"
+							icon="file-text"
+						/>
 					</div>
 				</li>
 			</ul>
@@ -33,20 +42,66 @@
 	<ErrorMessage :message="summaryResource.error" />
 
 	<SettlementDialog v-model="showSettleUpDialog" />
+
+	<Dialog :options="{ title: `History with ${selectedFriend.full_name}` }" v-model="showTransactionHistoryDialog">
+		<template #body-content>
+			<div>
+				<ol class="space-y-3">
+					<li class="text-gray-800 font-medium" v-for="item in transactionHistoryResource.data || []">
+						<div class="flex flex-row space-x-2 items-center" v-if="item.is_settlement">
+							<FeatherIcon class="w-5 text-green-700" name="dollar-sign" />
+							<div>
+								{{ getDisplayNameForHistory(item.credit_user) }} paid <span class="font-bold">₹{{ item.amount }}</span> to {{ getDisplayNameForHistory(item.debit_user) }}.
+							</div>
+						</div>
+						<div class="flex flex-row space-x-2 items-center" v-else>
+							<FeatherIcon class="w-5 text-amber-700" name="file" />
+							<div>
+								{{ getDisplayNameForHistory(item.debit_user) }} borrowed <span class="font-bold">₹{{ item.amount }}</span> from {{ getDisplayNameForHistory(item.credit_user) }}.
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div>
+		</template>
+	</Dialog>
+
+
 </template>
 
 <script setup>
-import { ref } from "vue";
-import {createResource, LoadingText, Card, Avatar} from "frappe-ui";
+import { reactive, ref } from "vue";
+import { createResource, LoadingText, Card, Avatar, Dialog, FeatherIcon} from "frappe-ui";
 import SettlementDialog from "../dashboard/SettlementDialog.vue";
+import {sessionUser} from "@/data/session";
 
 const showSettleUpDialog = ref(false);
+const showTransactionHistoryDialog = ref(false);
 
 const summaryResource = createResource({
 	url: "batwara.api.get_summary_for_session_user",
-	auto: true,
-	onSuccess(d) {
-		console.log(d)
+	auto: true
+})
+
+const selectedFriend = reactive({name: "friend3@email.com", full_name: "Shivam Ghosh"})
+const transactionHistoryResource = createResource({
+	url: "batwara.api.get_transaction_history_with_friend",
+	makeParams() {
+		return {
+			friend: selectedFriend.name
+		}
 	}
 })
+
+function getDisplayNameForHistory(name) {
+	if (name === sessionUser()) {
+		return "You"
+	}
+
+	if (name === selectedFriend.name) {
+		return selectedFriend.full_name
+	}
+
+	return name;
+}
 </script>

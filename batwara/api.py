@@ -30,7 +30,7 @@ def get_friends_for_user(user: str):
 			friends[mapping.b] = {"friend": mapping.b, "full_name": mapping.bfn, "user_image": mapping.bui}
 		else:
 			# b is the user
-			friends[mapping.a] = { "friend": mapping.a, "full_name": mapping.afn, "user_image": mapping.aui}
+			friends[mapping.a] = {"friend": mapping.a, "full_name": mapping.afn, "user_image": mapping.aui}
 
 	friends_list = list(friends.values())
 	return friends_list
@@ -148,9 +148,9 @@ def verify_otp_and_register(email: str, full_name: str, phone: str, otp: str, in
 
 
 def create_user_and_login(email, first_name, phone):
-	user_doc = frappe.get_doc({"doctype": "User", "email": email, "mobile_no": phone, "first_name": first_name}).insert(
-		ignore_permissions=True
-	)
+	user_doc = frappe.get_doc(
+		{"doctype": "User", "email": email, "mobile_no": phone, "first_name": first_name}
+	).insert(ignore_permissions=True)
 	user_doc.add_roles("Batwara User")
 	login_user_with_phone(phone)
 
@@ -190,8 +190,34 @@ def get_user_name_with_phone(phone: str):
 
 	return frappe.db.get_value("User", {"mobile_no": phone}, "name")
 
+
 @frappe.whitelist()
 def link_attachments_to_expense(name: str, attachments: list):
 	for attachment in attachments:
 		frappe.db.set_value("File", attachment["name"], "attached_to_doctype", "Expense")
 		frappe.db.set_value("File", attachment["name"], "attached_to_name", name)
+
+
+@frappe.whitelist()
+def get_transaction_history_with_friend(friend: str):
+	from frappe.query_builder import Order
+	me = frappe.session.user
+
+	sle = frappe.qb.DocType("Split Ledger Entry")
+	expense = frappe.qb.DocType("Expense")
+
+	query = (
+		frappe.qb.from_(sle)
+		.left_join(expense)
+		.on(sle.expense == expense.name)
+		.where(
+			((sle.debit_user == me) & (sle.credit_user == friend))
+			| ((sle.debit_user == friend) & (sle.credit_user == me))
+		)
+		.select(sle.creation, sle.amount, sle.is_settlement, sle.credit_user, sle.debit_user, sle.expense, expense.date, expense.description)
+		.orderby(sle.creation, order=Order.desc)
+	)
+
+	transaction_history = query.run(as_dict=True)
+	return transaction_history
+
