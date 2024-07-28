@@ -23,12 +23,15 @@ export const session = reactive({
       }
     },
     onSuccess(data) {
-      userResource.reload()
-      session.user = sessionUser()
-      session.login.reset()
+	  this.postLogin();
       router.replace(data.default_route || '/')
     },
   }),
+  postLogin() {
+	userResource.reload()
+	session.user = sessionUser()
+	session.login.reset()
+  },
   logout: createResource({
     url: 'logout',
     onSuccess() {

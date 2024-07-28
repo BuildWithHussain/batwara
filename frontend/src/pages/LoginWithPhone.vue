@@ -31,12 +31,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { inject, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Card, TabButtons, FormControl, createResource, ErrorMessage, LoadingText } from "frappe-ui";
 import SignUpForm from "../components/auth/SignUpForm.vue";
 import OTPInput from "../components/auth/OTPInput.vue";
 
+const session = inject("session");
 const router = useRouter();
 
 const phone = ref("");
@@ -65,7 +66,8 @@ const verifyOTPResource = createResource({
 		}
 	},
 	onSuccess() {
-		router.replace({name: "Dashboard"})
+		session.postLogin();
+		router.replace({ name: "Dashboard" })
 	}
 })
 
