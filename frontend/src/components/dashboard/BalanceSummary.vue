@@ -106,7 +106,7 @@ const summaryResource = createResource({
 	auto: true,
 })
 
-const selectedFriend = reactive({ name: 'friend3@email.com', full_name: 'Shivam Ghosh' })
+const selectedFriend = reactive({})
 const transactionHistoryResource = createResource({
 	url: 'batwara.api.get_transaction_history_with_friend',
 	makeParams() {
