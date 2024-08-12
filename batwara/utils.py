@@ -9,13 +9,10 @@ def get_twilio_client():
 
 	return Client(account_sid, auth_token)
 
+
 def send_text_message(message_body: str, to: str, from_: str = None):
 	if not from_:
 		from_ = frappe.db.get_single_value("Batwara Settings", "twilio_phone_number")
 
 	client = get_twilio_client()
-	return client.messages.create(
-		from_=from_,
-		body=message_body,
-		to=to
-	)
+	return client.messages.create(from_=from_, body=message_body, to=to)

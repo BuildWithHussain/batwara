@@ -3,20 +3,20 @@
 
 frappe.ui.form.on("Friend Mapping", {
 	onload(frm) {
-		frm.set_query("a", function(){
+		frm.set_query("a", function () {
 			return {
 				filters: {
-					"ignore_user_type": 1
-				}
-			}
+					ignore_user_type: 1,
+				},
+			};
 		});
 
-		frm.set_query("b", function(){
+		frm.set_query("b", function () {
 			return {
 				filters: {
-					"ignore_user_type": 1
-				}
-			}
+					ignore_user_type: 1,
+				},
+			};
 		});
 	},
 });

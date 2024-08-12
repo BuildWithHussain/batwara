@@ -6,6 +6,6 @@
 </template>
 
 <script setup>
-import BalanceSummary from "../components/dashboard/BalanceSummary.vue";
-import ExpenseList from "../components/dashboard/ExpenseList.vue";
+import BalanceSummary from '../components/dashboard/BalanceSummary.vue'
+import ExpenseList from '../components/dashboard/ExpenseList.vue'
 </script>

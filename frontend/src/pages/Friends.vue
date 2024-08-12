@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import FriendsList from "../components/friends/List.vue";
+import FriendsList from '../components/friends/List.vue'
 </script>

@@ -3,12 +3,12 @@
 
 frappe.ui.form.on("Expense", {
 	onload(frm) {
-		frm.set_query("paid_by", function(){
+		frm.set_query("paid_by", function () {
 			return {
 				filters: {
-					"ignore_user_type": 1
-				}
-			}
+					ignore_user_type: 1,
+				},
+			};
 		});
 	},
 });
