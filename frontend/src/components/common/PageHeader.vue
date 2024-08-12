@@ -7,6 +7,6 @@
 
 <script setup>
 const props = defineProps({
-	heading: String
+	heading: String,
 })
 </script>

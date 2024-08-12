@@ -5,7 +5,7 @@
 		:should-focus-order="true"
 		v-model="model"
 		separator="-"
-		@on-change="(v) => model = v"
+		@on-change="(v) => (model = v)"
 		@on-complete="(v) => emit('complete', v)"
 		:placeholder="['*', '*', '*', '*', '*', '*']"
 		:num-inputs="6"
@@ -14,10 +14,10 @@
 </template>
 
 <script setup>
-import VOtpInput from "vue3-otp-input";
+import VOtpInput from 'vue3-otp-input'
 
 const props = defineProps({
-	disabled: Boolean
+	disabled: Boolean,
 })
 
 const model = defineModel()
