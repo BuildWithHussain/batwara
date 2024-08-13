@@ -201,6 +201,7 @@ def link_attachments_to_expense(name: str, attachments: list):
 @frappe.whitelist()
 def get_transaction_history_with_friend(friend: str):
 	from frappe.query_builder import Order
+
 	me = frappe.session.user
 
 	sle = frappe.qb.DocType("Split Ledger Entry")
@@ -214,10 +215,18 @@ def get_transaction_history_with_friend(friend: str):
 			((sle.debit_user == me) & (sle.credit_user == friend))
 			| ((sle.debit_user == friend) & (sle.credit_user == me))
 		)
-		.select(sle.creation, sle.amount, sle.is_settlement, sle.credit_user, sle.debit_user, sle.expense, expense.date, expense.description)
+		.select(
+			sle.creation,
+			sle.amount,
+			sle.is_settlement,
+			sle.credit_user,
+			sle.debit_user,
+			sle.expense,
+			expense.date,
+			expense.description,
+		)
 		.orderby(sle.creation, order=Order.desc)
 	)
 
 	transaction_history = query.run(as_dict=True)
 	return transaction_history
-

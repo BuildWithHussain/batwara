@@ -5,13 +5,13 @@ import router from './router'
 import App from './App.vue'
 
 import {
-  Button,
-  Card,
-  Input,
-  setConfig,
-  frappeRequest,
-  resourcesPlugin,
-  ErrorMessage
+	Button,
+	Card,
+	Input,
+	setConfig,
+	frappeRequest,
+	resourcesPlugin,
+	ErrorMessage,
 } from 'frappe-ui'
 import { session } from './data/session'
 
@@ -27,6 +27,6 @@ app.component('Card', Card)
 app.component('Input', Input)
 app.component('ErrorMessage', ErrorMessage)
 
-app.provide("session", session);
+app.provide('session', session)
 
 app.mount('#app')
