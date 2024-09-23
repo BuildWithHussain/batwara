@@ -44,6 +44,12 @@
 							expenseDetails.split_method = 'Manually'
 						},
 					},
+					{
+						label: 'Percentage',
+						onClick: () => {
+							expenseDetails.split_method = 'Percentage'
+						},
+					},
 				]"
 				:button="{
 					label: expenseDetails.split_method,
@@ -75,6 +81,20 @@
 				</li>
 			</ol>
 		</div>
+
+		<div v-if="expenseDetails.split_method === 'Percentage'">
+			<ol class="space-y-3">
+				<li v-for="friend in expenseDetails.selected_friends">
+					<FormControl
+						v-model.number="friend.percentage"
+						type="number"
+						:label="friend.label"
+						placeholder="0%"
+					/>
+				</li>
+			</ol>
+		</div>
+
 	</div>
 
 	<div>
@@ -186,6 +206,7 @@ function saveExpense() {
 			splits: expenseDetails.selected_friends.map((f) => ({
 				user: f.value,
 				amount: f.amount || 0.0,
+				percentage: f.percentage || 0.0
 			})),
 		},
 		{

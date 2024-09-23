@@ -12,9 +12,8 @@ class Expense(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
 		from batwara.batwara.doctype.expense_split.expense_split import ExpenseSplit
+		from frappe.types import DF
 
 		amended_from: DF.Link | None
 		amount: DF.Currency
@@ -23,7 +22,7 @@ class Expense(Document):
 		description: DF.Data
 		notes: DF.SmallText | None
 		paid_by: DF.Link
-		split_method: DF.Literal["Equally", "Manually"]
+		split_method: DF.Literal["Equally", "Manually", "Percentage"]
 		splits: DF.Table[ExpenseSplit]
 	# end: auto-generated types
 
@@ -33,6 +32,9 @@ class Expense(Document):
 	def apply_split(self):
 		if self.split_method == "Equally":
 			self.calculate_equal_splits()
+		elif self.split_method == "Percentage":
+			self.validate_percentage_splits()
+			self.calculate_percentage_splits() 
 		else:
 			# manually
 			self.validate_manual_splits()
@@ -49,6 +51,15 @@ class Expense(Document):
 
 		for s in self.splits:
 			s.amount = split_amount
+	
+	def validate_percentage_splits(self):
+		sum_of_percentages = sum(x.percentage for x in self.splits)
+		if sum_of_percentages != 100:
+			frappe.throw("Sum of percentages must equal 100%!")
+
+	def calculate_percentage_splits(self):
+		for s in self.splits:
+			s.amount = (s.percentage / 100) * self.amount
 
 	def before_submit(self):
 		self.create_ledger_entries()

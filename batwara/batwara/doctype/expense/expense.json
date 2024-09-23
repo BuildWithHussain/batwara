@@ -102,7 +102,7 @@
    "fieldname": "split_method",
    "fieldtype": "Select",
    "label": "Split Method",
-   "options": "Equally\nManually",
+   "options": "Equally\nManually\nPercentage",
    "reqd": 1
   },
   {
@@ -118,7 +118,7 @@
    "link_fieldname": "expense"
   }
  ],
- "modified": "2024-07-28 16:20:39.494671",
+ "modified": "2024-09-23 15:52:18.839671",
  "modified_by": "Administrator",
  "module": "Batwara",
  "name": "Expense",
